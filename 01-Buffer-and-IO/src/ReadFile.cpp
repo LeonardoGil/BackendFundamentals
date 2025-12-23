@@ -1,16 +1,26 @@
 #include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
+#include <string>
+#include <vector>
+#include <string>
 
-int main()
-{
-    char* arquivo;
-    const int BUFFER_SIZE = 64;
+
+using namespace std;
+
+int main(int argc, char* argv[]) {
     
-    std::cin >> arquivo;
+    if (argc != 3) {
+        cerr << "Uso: ./teste <arquivo> <buffer>" << endl;
+        return 1;
+    }
+    
+    vector<string> args(argv, argv + argc);
+    
+    std::string arquivo = args[1];
+    int BUFFER_SIZE = stoi(args[2]);
 
-    int fd = open(arquivo, O_RDONLY);
-
+    int fd = open(arquivo.c_str(), O_RDONLY);
     if (fd == -1) {
         std::cerr << "Erro ao abrir arquivo\n";
         return 1;
@@ -19,16 +29,10 @@ int main()
     char buffer[BUFFER_SIZE];
     ssize_t bytesLidos;
 
-    while (true) {
-        bytesLidos = read(fd, buffer, BUFFER_SIZE);
-
-        if (bytesLidos <= 0) {
-            break;
-        }
-
+    while ((bytesLidos = read(fd, buffer, BUFFER_SIZE)) > 0) {
         write(STDOUT_FILENO, buffer, bytesLidos);
 
-        std::cout << "\n--- Pressione ENTER para continuar ou 'q' para sair ---\n";
+        std::cout << "\n--- ENTER para continuar | q para sair ---\n";
         char opcao = std::cin.get();
 
         if (opcao == 'q') {
