@@ -11,7 +11,7 @@
                 "-g",
                 "${file}",
                 "-o",
-                "teste"
+                "${fileDirname}/bin/${fileBasenameNoExtension}"
             ],
             "problemMatcher": [],
             "group": {
